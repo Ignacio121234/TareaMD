@@ -10,11 +10,11 @@
 #define MAX_STR_LEN 100
 #define MAX_CALLES 50
 #define MAX_PUNTOS 200
+#define MAX_INTERSECCIONES 1300
 
 typedef struct {
     double x;
     double y;
-
 } Punto;
 
 typedef struct {
@@ -33,25 +33,15 @@ typedef struct {
 
 typedef struct {
     Punto p;
-    int id_calle_a;
-    int id_calle_b;
+    char name_calle_a[MAX_STR_LEN];
+    char name_calle_b[MAX_STR_LEN];
 } Interseccion;
 
 /* Prototipos de funciones */
-
-/*
-    Buscamos usar el algoritmo de orientación 
-    para determinar si dos calles se intersectan.
-*/
-bool se_intersectan(Calle c1, Calle c2);
 int orientacion(Punto p, Punto q, Punto r);
 bool on_segment(Punto p, Punto q, Punto r);
-
-
-
-Punto calcular_interseccion(Calle c1, Calle c2);
-int leer_archivo(const char *filename, Calle *calles, int *num_calles, PuntoTuristico *puntos, int *num_puntos);
-double calcular_distancia(Punto p1, Punto p2);
+bool se_intersectan(Calle c1, Calle c2);
+Interseccion calcular_interseccion(Calle c1, Calle c2);
 
 
 #endif

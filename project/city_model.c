@@ -2,6 +2,16 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
+
+
+/*
+ La idea es que en este archivo se logre dejar el modelo de la cuidad listo 
+ para poder calcular las intersecciones entre calles, y también para calcular 
+ la distancia entre puntos turísticos y las calles.
+*/
+
+
+
 // 1. Calcula la orientación de los 3 puntos
 // Retorna 0 (Colineal), 1 (Horario), o 2 (Antihorario)
 int orientacion(Punto p, Punto q, Punto r) {
@@ -36,3 +46,28 @@ bool se_intersectan(Calle c1, Calle c2) {
 
     return false; // No se intersectan
 }
+
+void calcular_interseccion(Calle c1, Calle c2) {
+    Interseccion inter;
+    Punto pto;
+    Punto p1 = c1.inicio, q1 = c1.fin;
+    Punto p2 = c2.inicio, q2 = c2.fin;
+
+    double d = (p1.x - q1.x) * (p2.y - q2.y) - (p1.y - q1.y) * (p2.x - q2.x);
+    if (d == 0.0) {
+        pto.x = p1.x; // Colineales, tomar un punto cualquiera
+        pto.y = p1.y;
+        return pto;
+    }
+
+    double num_x = (p1.x * q1.y - p1.y * q1.x) * (p2.x - q2.x) - (p1.x - q1.x) * (p2.x * q2.y - p2.y * q2.x);
+    double num_y = (p1.x * q1.y - p1.y * q1.x) * (p2.y - q2.y) - (p1.y - q1.y) * (p2.x * q2.y - p2.y * q2.x);
+    pto.x = num_x / d;
+    pto.y = num_y / d;
+
+    inter.p = pto;
+    
+
+    return inter; 
+}
+
