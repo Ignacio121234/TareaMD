@@ -47,7 +47,7 @@ bool se_intersectan(Calle c1, Calle c2) {
     return false; // No se intersectan
 }
 
-void calcular_interseccion(Calle c1, Calle c2) {
+Interseccion calcular_interseccion(Calle c1, Calle c2) {
     Interseccion inter;
     Punto pto;
     Punto p1 = c1.inicio, q1 = c1.fin;
@@ -57,7 +57,8 @@ void calcular_interseccion(Calle c1, Calle c2) {
     if (d == 0.0) {
         pto.x = p1.x; // Colineales, tomar un punto cualquiera
         pto.y = p1.y;
-        return pto;
+        inter.p = pto;
+        return inter;
     }
 
     double num_x = (p1.x * q1.y - p1.y * q1.x) * (p2.x - q2.x) - (p1.x - q1.x) * (p2.x * q2.y - p2.y * q2.x);

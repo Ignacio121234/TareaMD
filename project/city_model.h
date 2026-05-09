@@ -9,8 +9,8 @@
 
 #define MAX_STR_LEN 100
 #define MAX_CALLES 50
-#define MAX_PUNTOS 200
 #define MAX_INTERSECCIONES 1300
+#define MAX_PUNTOS_TURISTICOS 100
 
 typedef struct {
     double x;
