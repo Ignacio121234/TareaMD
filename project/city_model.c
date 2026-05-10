@@ -58,6 +58,11 @@ Interseccion calcular_interseccion(Calle c1, Calle c2) {
         pto.x = p1.x; // Colineales, tomar un punto cualquiera
         pto.y = p1.y;
         inter.p = pto;
+
+        strcpy(inter.name_calle_a, c1.nombre);
+        strcpy(inter.name_calle_b, c2.nombre);
+
+
         return inter;
     }
 
@@ -68,6 +73,9 @@ Interseccion calcular_interseccion(Calle c1, Calle c2) {
 
     inter.p = pto;
     
+
+    strcpy(inter.name_calle_a, c1.nombre);
+    strcpy(inter.name_calle_b, c2.nombre);
 
     return inter; 
 }
