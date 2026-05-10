@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include "city_model.h"
+#include "graph.h"
 
 // Funcion para ver por que calle vamos (compara los nodos)
 void obtener_calle(Nodo n1, Nodo n2, char *calle_encontrada) {
