@@ -1,0 +1,108 @@
+\documentclass[12pt, a4paper]{article}
+
+% --- Paquetes Básicos ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\geometry{left=3cm, right=3cm, top=2.5cm, bottom=2.5cm}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+% Configuración básica para que el código en C se vea bien
+\lstset{
+    language=C,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue},
+    stringstyle=\color{red},
+    commentstyle=\color{green!60!black},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    breaklines=true,
+    frame=single,
+    showstringspaces=false
+}
+
+\begin{document}
+
+% --- PORTADA ---
+\begin{titlepage}
+    \centering
+    {\Large \textbf{Universidad de Concepción}} \\[0.5cm]
+    {\large Facultad de Ingeniería} \\[0.5cm] 
+    {\large Carrera Ingeniería Civil Informática} \\[3cm]
+
+    {\Huge \textbf{Proyecto Semestral: Mapa Turístico}} \\[1cm]
+    {\Large \textbf{Modelamiento Espacial y Cálculo de Rutas mediante Teoría de Grafos}} \\[1cm]
+
+    {\Large \textbf{Curso:} Matemáticas Discretas} \\[0.5cm]
+    {\Large \textbf{Profesora:} [Nombre de la Profesora]} \\[2cm]
+
+    \begin{flushright}
+        \large
+        \textbf{Integrantes:} \\ 
+        Juan Umaña \\
+        Nombre del Integrante 2 \\
+        Nombre del Integrante 3 \\[1cm]
+        \textbf{Fecha de Entrega:} 11 de Mayo de 2026
+    \end{flushright}
+
+    \vfill
+\end{titlepage}
+
+\setcounter{page}{1}
+
+% --- CUERPO DEL INFORME ---
+
+\section{Introducción}
+El presente informe detalla el desarrollo de una solución computacional para el problema de la navegación urbana y el ruteo turístico. La tarea consiste en transformar una descripción textual de calles y puntos de interés en un modelo matemático funcional que permita determinar rutas transitables para un usuario. El desafío principal radica en la abstracción de elementos geométricos (segmentos de recta) hacia estructuras discretas (grafos), donde la topología de la ciudad dictamina las posibilidades de movimiento.
+
+Nuestra solución propuesta utiliza un enfoque de grafos espaciales, donde se identifican automáticamente los puntos de colisión entre calles para generar una red de tránsito. Para la búsqueda de rutas, se ha implementado un algoritmo de Búsqueda en Anchura (BFS), el cual garantiza encontrar un camino entre dos puntos de interés si este existe. El texto se organiza comenzando por la definición del modelo matemático y geométrico, seguido por las decisiones de arquitectura de software en lenguaje C, para finalizar con los resultados y conclusiones técnicas del proyecto.
+
+\section{Objetivos}
+\textbf{Objetivo Principal:} \\
+Diseñar e implementar un sistema capaz de modelar un mapa urbano a partir de coordenadas reales y calcular rutas de navegación entre múltiples puntos de interés mediante el uso de algoritmos de teoría de grafos.
+
+\textbf{Objetivos Específicos:}
+\begin{itemize}
+    \item Implementar un motor de geometría analítica robusto para la detección de intersecciones mediante algoritmos de orientación.
+    \item Modelar una estructura de datos de grafo eficiente que soporte nodos heterogéneos (intersecciones y puntos turísticos).
+    \item Garantizar la integridad y estabilidad del sistema bajo restricciones de memoria estática, optimizando el acceso y la gestión de adyacencias.
+    \item Validar la conectividad del mapa mediante recorridos de grafos para ofrecer instrucciones de navegación claras al usuario.
+\end{itemize}
+
+\section{Modelo}
+El modelo matemático se fundamenta en la representación de la ciudad como un grafo no dirigido $G = (V, E)$. La generación de este modelo se divide en tres fases críticas:
+
+\subsection{Definición de Nodos (V)}
+Se han definido dos tipos de vértices para cubrir la realidad del mapa:
+\begin{itemize}
+    \item \textbf{Intersecciones:} Puntos donde dos segmentos de calle se cruzan.
+    \item \textbf{Puntos Turísticos:} Ubicaciones específicas sobre una calle destinadas a ser visitadas.
+\end{itemize}
+
+\subsection{Detección de Intersecciones}
+Para determinar la existencia de una intersección entre dos calles, se utiliza el Algoritmo de Orientación Geométrica basado en el producto cruz. Este método evita el uso de pendientes, previniendo errores de división por cero en calles verticales. Posteriormente, se utiliza la Regla de Cramer para resolver el sistema de ecuaciones lineales resultante de las rectas y obtener las coordenadas $(x, y)$ exactas del punto de colisión.
+
+\subsection{Lógica de Adyacencia (E)}
+La adyacencia se define por la proximidad consecutiva. Para cada calle, se recolectan todos los nodos que residen en ella y se ordenan linealmente según su distancia euclidiana respecto al origen de la calle. Se establece una arista entre dos nodos si son vecinos inmediatos en esta lista ordenada, garantizando un tránsito realista por los tramos de calle.
+
+\section{Implementación}
+La implementación se realizó en lenguaje C, priorizando la eficiencia y el manejo estático de recursos.
+
+\subsection{Estructuras de Datos y Polimorfismo}
+Se utilizó el patrón \textit{Tagged Union} mediante la estructura \texttt{Nodo}, que integra un \texttt{enum} (\texttt{TipoNodo}) y una \texttt{union} para almacenar los datos de una \texttt{Interseccion} o de un \texttt{PuntoTuristico} sin pérdida de seguridad de tipos.
+
+\subsection{Arquitectura del Grafo}
+La estructura principal \texttt{mi\_grafo} contiene un arreglo de nodos de tamaño fijo (\texttt{MAX\_NODOS}). Cada nodo gestiona sus adyacencias mediante un arreglo estático \texttt{vecinos[MAX\_VECINOS]}. Se definió \texttt{MAX\_VECINOS = 100}, justificándose por el peor caso topológico de convergencia de calles.
+
+\subsection{Manejo de Memoria y Algoritmo}
+Esta arquitectura estática ofrece determinismo y evita fugas de memoria al prescindir de \texttt{malloc}. Para el cálculo de rutas, la función \texttt{hacer\_ruta} implementa un algoritmo \textbf{BFS (Breadth-First Search)}, explorando el grafo nivel por nivel para asegurar la conectividad entre los puntos de interés.
+
+\section{Conclusiones}
+Desde una perspectiva técnica, el modelamiento de una ciudad a través de grafos discretos demuestra ser una herramienta eficaz para la resolución de problemas de navegación. La implementación de una estructura estática garantizó robustez frente a errores de memoria comunes en C. El uso de algoritmos geométricos para la autogeneración de nodos dota al sistema de versatilidad para procesar diversos mapas.
+
+\textit{[Párrafo de impresión personal: Aquí deben añadir sus comentarios sobre el trabajo en equipo y las dificultades específicas enfrentadas durante el desarrollo.]}
+
+\end{document}
