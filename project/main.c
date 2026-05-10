@@ -16,7 +16,7 @@ int main() {
     leer_archivo_ciudad(calles, &total_calles, lugares, &total_lugares);
     inicializar_grafo(&mi_grafo);
 
-    //
+    
     int ids_turisticos[MAX_PUNTOS_TURISTICOS];
     for (int i = 0; i < total_lugares; i++) {
         for (int j = 0; j < total_calles; j++) {
