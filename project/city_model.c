@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <math.h>
 
-
+//
 /*
  La idea es que en este archivo se logre dejar el modelo de la cuidad listo 
  para poder calcular las intersecciones entre calles, y también para calcular 
