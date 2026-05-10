@@ -4,6 +4,9 @@
 #include "city_model.h"
 #include "graph.h"
 
+//copiar esto para runear codigo
+//gcc main.c archivotxt.c bfs.c city_model.c graph.c -o main -lm ; if ($?) { .\main }
+
 void leer_archivo_ciudad(Calle calles[], int *total_calles, PuntoTuristico lugares[], int *total_lugares);
 void hacer_ruta(Grafo *grafo, int id_inicio, int id_destino);
 
