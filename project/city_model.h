@@ -42,6 +42,7 @@ int orientacion(Punto p, Punto q, Punto r);
 bool on_segment(Punto p, Punto q, Punto r);
 bool se_intersectan(Calle c1, Calle c2);
 Interseccion calcular_interseccion(Calle c1, Calle c2);
+double calcular_distancia(Punto p1, Punto p2);
 
 
 #endif

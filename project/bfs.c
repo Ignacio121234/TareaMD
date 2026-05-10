@@ -39,8 +39,9 @@ void obtener_calle(Nodo n1, Nodo n2, char *calle_encontrada) {
 }
 
 
-// BFS para encontrar la ruta
-void hacer_ruta(Grafo *grafo, int id_inicio, int id_destino) {
+// BFS para encontrar la ruta. Retorna true si encontro camino.
+// visitados_globales sirve para marcar puntos turisticos que se pasan en el trayecto.
+bool hacer_ruta(Grafo *grafo, int id_inicio, int id_destino, bool visitados_globales[]) {
     bool visitado[MAX_NODOS] = {false};
     int padre[MAX_NODOS]; 
     
@@ -89,6 +90,19 @@ void hacer_ruta(Grafo *grafo, int id_inicio, int id_destino) {
         int actual = id_destino;
         while (actual != -1) {
             camino_al_reves[cantidad_pasos] = actual;
+            // Marcar como visitado si es de tipo turistico
+            if (grafo->nodos[actual].tipo == TIPO_TURISTICO) {
+                // Buscamos el indice del punto turistico original
+                // En el grafo, los primeros nodos agregados suelen ser los turisticos
+                // Pero para ser seguros, podriamos comparar nombres o tener un mapeo.
+                // Asumiendo que id corresponde al orden en que se agregaron:
+                for(int j=0; j < MAX_PUNTOS_TURISTICOS; j++) {
+                    // Si el ID del nodo coincide con un punto turistico, lo marcamos
+                    if (grafo->nodos[actual].id == j) { // Esto es una simplificacion
+                         // En main.c manejaremos mejor la correspondencia ID -> Indice
+                    }
+                }
+            }
             cantidad_pasos++;
             actual = padre[actual];
         }
@@ -96,6 +110,18 @@ void hacer_ruta(Grafo *grafo, int id_inicio, int id_destino) {
         int ruta_derecha[MAX_NODOS];
         for (int i = 0; i < cantidad_pasos; i++) {
             ruta_derecha[i] = camino_al_reves[cantidad_pasos - 1 - i];
+            
+            // Marcar como visitado en el arreglo global si es un punto turistico
+            if (grafo->nodos[ruta_derecha[i]].tipo == TIPO_TURISTICO) {
+                // El ID del nodo turistico en el grafo se mapea directamente si los 
+                // agregamos en orden en main.c. Para ser mas robustos, marcamos 
+                // basandonos en el ID si este es menor a MAX_PUNTOS_TURISTICOS.
+                int id_nodo = grafo->nodos[ruta_derecha[i]].id;
+                // En main.c, los primeros nodes agregados son los turisticos.
+                if (id_nodo < MAX_PUNTOS_TURISTICOS) {
+                    visitados_globales[id_nodo] = true;
+                }
+            }
         }
 
         char calle_actual[100] = "";
@@ -111,16 +137,17 @@ void hacer_ruta(Grafo *grafo, int id_inicio, int id_destino) {
 
             if (strcmp(calle_actual, calle_siguiente) != 0) {
                 if (i == 0) {
-                    printf("-> Camina por calle %s.\n", calle_siguiente);
+                    printf("  -> Camina por calle %s.\n", calle_siguiente);
                 } else {
-                    printf("-> Dobla en calle %s.\n", calle_siguiente);
+                    printf("  -> Dobla en calle %s.\n", calle_siguiente);
                 }
                 strcpy(calle_actual, calle_siguiente); 
             }
         }
-        printf("-> Llegaste a: %s\n", grafo->nodos[ruta_derecha[cantidad_pasos-1]].info.turistico.nombre);
-        
+        printf("Llegaste a: %s\n", grafo->nodos[ruta_derecha[cantidad_pasos-1]].info.turistico.nombre);
+        return true;
     } else {
         printf("No se encontro un camino valido.\n");
+        return false;
     }
 }

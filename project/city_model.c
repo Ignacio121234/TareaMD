@@ -47,6 +47,10 @@ bool se_intersectan(Calle c1, Calle c2) {
     return false; // No se intersectan
 }
 
+double calcular_distancia(Punto p1, Punto p2) {
+    return sqrt(pow(p2.x - p1.x, 2) + pow(p2.y - p1.y, 2));
+}
+
 Interseccion calcular_interseccion(Calle c1, Calle c2) {
     Interseccion inter;
     Punto pto;
